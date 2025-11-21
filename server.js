@@ -155,7 +155,7 @@ app.delete('/movies/:id', [authenticateToken, authorizeRole('admin')], async (re
     }
 });
 
-// directors
+// === MOVIES DIRECTORS (Refactored for pg)===
 
 app.get('/directors', (req, res) => {
     const sql = "SELECT * FROM directors ORDER BY id ASC";
