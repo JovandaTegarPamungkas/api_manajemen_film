@@ -33,7 +33,7 @@ app.post('/auth/register', async (req, res, next) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const sql = 'INSERT INTO users (username, password, role) VALUES ($1, $2, $3) RETURNING id, username';
-        const result = await db.query(sql, [username.toLowerCase(), hashedPassword, 'users']);
+        const result = await db.query(sql, [username.toLowerCase(), hashedPassword, 'user']);
         res.status(201).json(result.rows[0]);
     } catch (err) {
         if (err.code === '23505') { // Kode error unik PostgreSQL
@@ -102,7 +102,7 @@ app.get('/movies/:id', async (req, res, next) => {
     WHERE m.id = $1`;
 
     try {
-        const result = await db.query(sql, [params.id]);
+        const result = await db.query(sql, [req.params.id]);
         if (result.rows.length === 0) {
             return res.status(404).json({error: 'Film tidak ditemukan'});
         }
@@ -143,9 +143,8 @@ app.put('/movies/:id', [authenticateToken, authorizeRole('admin')], async (req, 
 
 app.delete('/movies/:id', [authenticateToken, authorizeRole('admin')], async (req, res, next) => {
     const sql = 'DELETE FROM movies WHERE id = $1 RETURNING *';
-    
     try {
-        const result = await db.query(sql, [req. params.id]);
+        const result = await db.query(sql, [req.params.id]);
         if (result.rowCount === 0) {
             return res.status(404).json({error: 'Film tidak ditemukan'});
         }
@@ -157,7 +156,7 @@ app.delete('/movies/:id', [authenticateToken, authorizeRole('admin')], async (re
 
 // === DIRECTORS ROUTES (Refactored for pg)===
 
-app.get('/directors', (req, res) => {
+app.get('/directors', async (req, res, next) => {
     const sql = "SELECT * FROM directors ORDER BY id ASC";
     db.all(sql, [], (err, rows) => {
         if (err) {

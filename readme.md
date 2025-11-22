@@ -31,3 +31,16 @@ https://github.com/JovandaTegarPamungkas/api_fanajemen_film.git
 
 # push -f
 git push -f origin main
+
+# cek ke 2 github
+git remote -v
+
+git remote remove origin main
+
+git add .
+
+lalu git remote add origin https://github.com/JovandaTegarPamungkas/API-Manajemen-Film.git
+git push -u origin main
+
+git remote set-url origin https://github.com/JovandaTegarPamungkas/api_fanajemen_film.git
+git push -u origin main
