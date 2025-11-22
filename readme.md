@@ -35,7 +35,7 @@ git push -f origin main
 # cek ke 2 github
 git remote -v
 
-git remote remove origin main
+git remote remove origin
 
 git status
 
